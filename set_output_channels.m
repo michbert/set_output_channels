@@ -56,6 +56,19 @@ int main(int argc, const char * argv[]) {
             return 1;
         }
         
+        // Verify if the channel number was successfully set
+        dataSize = sizeof(streamFormat);
+        status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, NULL, &dataSize, &streamFormat);
+        if (status != noErr) {
+            NSLog(@"Failed to verify the stream format of the audio device.");
+            return 1;
+        }
+        
+        if (streamFormat.mChannelsPerFrame != numChannels) {
+            NSLog(@"Failed to set the number of output channels to %ld.", (long)numChannels);
+            return 1;
+        }
+        
         NSLog(@"Number of output channels set to %ld successfully.", (long)numChannels);
     }
     return 0;
